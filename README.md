@@ -33,8 +33,7 @@ This application requires the following components:
 ### 1. Clone Repository
 
 ```bash
-git clone <repository-url>
-cd user-management-system
+git clone https://github.com/mahmoud-el-tohamy/Simple-MEAN-Stack-Page.git
 ```
 
 ### 2. Install Dependencies
