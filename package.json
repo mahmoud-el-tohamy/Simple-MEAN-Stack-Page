@@ -1,7 +1,7 @@
 {
-  "name": "meantutorial",
+  "name": "user-management-system",
   "version": "1.0.0",
-  "description": "mean stack application",
+  "description": "Enterprise-grade user management platform with JWT authentication, role-based access control, and administrative dashboard",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,13 @@
   },
   "keywords": [
     "MEAN",
-    "stack"
+    "user-management",
+    "authentication",
+    "JWT",
+    "MongoDB",
+    "Express",
+    "Angular",
+    "Node.js"
   ],
   "author": "Mahmoud El-Tohamy",
   "license": "ISC",

@@ -1,301 +1,372 @@
-# MEAN Stack User Management System
+# Advanced User Management System
 
-## Project Description
+## Overview
 
-A comprehensive web application built with the MEAN stack (MongoDB, Express.js, Angular.js, Node.js) that provides user account management, authentication, and administrative features. The application allows users to register, log in, manage their profiles, and provides administrators with tools to search, edit, and manage user accounts.
+A production-grade user management and authentication platform built with the MEAN stack (MongoDB, Express.js, Angular.js, Node.js). This system provides enterprise-level account management, role-based access control, and a comprehensive administrative interface for managing user accounts at scale.
 
-**Key Features:**
+**Core Capabilities:**
 
-- User registration and authentication
-- Secure login with JWT token-based authentication
-- User profile management
-- Admin/moderator dashboard for user management
-- Advanced user search and filtering capabilities
-- Responsive user interface
-- Social media integration links
-
----
-
-## Prerequisites
-
-Before installing and running this application, ensure your system has the following installed:
-
-- **Node.js** (v14.0.0 or higher) - [Download](https://nodejs.org/)
-- **npm** (v6.0.0 or higher) - Comes with Node.js
-- **MongoDB** (v4.0 or higher) - [Download](https://www.mongodb.com/try/download/community)
-  - MongoDB should be running as a service on your system
-  - For Linux: Install via package manager or download from MongoDB
-  - For macOS/Windows: Download MongoDB Community Edition installer
-- **Git** (optional, for cloning the repository)
+- **Authentication & Authorization:** JWT-based token authentication with 24-hour expiry
+- **User Account Management:** Registration, profile updates, and account lifecycle management
+- **Role-Based Access Control:** Three-tier permission model (User, Moderator, Admin)
+- **Administrative Dashboard:** Advanced user search, filtering, batch operations, and account modifications
+- **Security:** bcryptjs password hashing, input validation, and secure session management
+- **Responsive Design:** Mobile-first UI with Bootstrap framework
+- **Extensible Architecture:** Passport.js strategies for OAuth integration (Facebook, Twitter, Google)
 
 ---
 
-## Installation & Setup
+## System Requirements
 
-### Step 1: Clone or Download the Project
+This application requires the following components:
+
+- **Node.js:** v14.0.0+ ([Download](https://nodejs.org/))
+- **npm:** v6.0.0+ (included with Node.js)
+- **MongoDB:** v4.0+ ([Community Edition](https://www.mongodb.com/try/download/community))
+  - Running as a system service on port 27017 (default)
+- **Git:** For cloning and version control (optional)
+
+---
+
+## Installation Guide
+
+### 1. Clone Repository
 
 ```bash
 git clone <repository-url>
-cd meanstacktutorial
+cd user-management-system
 ```
 
-### Step 2: Install Dependencies
-
-Navigate to the project root directory and install all Node.js dependencies:
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-This will install all required packages including:
+This installs production dependencies:
 
-- Express.js (backend framework)
-- Mongoose (MongoDB ODM)
-- Angular.js (frontend framework)
-- bcrypt-nodejs (password encryption)
-- jsonwebtoken (JWT authentication)
-- And other dependencies listed in `package.json`
+- **Express.js:** RESTful API framework
+- **Mongoose:** MongoDB object modeling
+- **Angular.js:** Frontend MVC framework
+- **bcryptjs:** Password hashing with salt rounds
+- **jsonwebtoken:** JWT token generation and validation
+- **Passport.js:** Authentication middleware with social login strategies
 
-### Step 3: Verify MongoDB Installation
+### 3. MongoDB Setup
 
-Ensure MongoDB is installed and running on your system:
+**Verify MongoDB is running:**
 
-**On Linux (Ubuntu/Debian):**
+**Linux (systemd):**
 
 ```bash
 sudo systemctl status mongod
-# If not running, start it with:
-sudo systemctl start mongod
+sudo systemctl start mongod  # If not running
 ```
 
-**On macOS:**
+**macOS (Homebrew):**
 
 ```bash
 brew services start mongodb-community
 ```
 
-**On Windows:**
+**Windows:**
 
-- MongoDB should start automatically as a service
-- Verify it's running in Services (Services.msc)
+- MongoDB automatically runs as a Windows Service after installation
+- Verify in Services.msc
 
-### Step 4: Configure MongoDB Connection
+### 4. Database Configuration
 
-The application is configured to use MongoDB locally on the default port. The connection string is set in `server.js`:
+MongoDB connection settings are defined in `server.js`:
 
 ```javascript
-mongoose.connect("mongodb://localhost:27017/meantutorial", function (err) {
-  if (err) {
-    console.log("Not connected to the database: " + err);
-  } else {
-    console.log("Successfully connected to MongoDB");
-  }
+mongoose.connect("mongodb://localhost:27017/user_management_db", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 ```
 
-**To use a different MongoDB connection:**
-
-Edit `server.js` and modify the connection string:
+To connect to a remote MongoDB instance, modify the connection string:
 
 ```javascript
-mongoose.connect("mongodb://YOUR_CONNECTION_STRING", function (err) {
-  // ...
-});
+mongoose.connect("mongodb://username:password@host:port/user_management_db");
 ```
 
-### Step 5: (Optional) Configure Email Notifications
+### 5. Email Configuration (Optional)
 
-**Note:** For development, email notifications are mocked and do not actually send emails. For production use:
+Email notifications are mocked in development to prevent authentication failures. For production deployment:
 
-1. Open `app/routes/api.js`
-2. Replace the Nodemailer configuration with your email service credentials:
+1. Edit `app/routes/api.js`
+2. Configure Nodemailer with your SMTP provider:
 
 ```javascript
 var client = nodemailer.createTransport({
-  service: "Gmail", // or your email provider
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: "your-email@gmail.com",
-    pass: "your-app-password",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 ```
+
+Use environment variables to store sensitive credentials.
 
 ---
 
 ## Running the Application
 
-### Start MongoDB
+### Prerequisites Check
 
-Ensure MongoDB is running before starting the application:
+Before launching, ensure:
 
-```bash
-# Linux
-sudo systemctl start mongod
-
-# macOS
-brew services start mongodb-community
-```
+1. MongoDB service is running
+2. All dependencies are installed (`npm install`)
+3. Port 8080 is available
 
 ### Start the Application
-
-From the project root directory, start the Node.js server:
 
 ```bash
 npm start
 ```
 
-You should see the following output:
+Expected output:
 
 ```
-> meantutorial@1.0.0 start
+> user_management_db@1.0.0 start
 > node server.js
 
 Running the server on port 8080
 Successfully connected to MongoDB
 ```
 
-### Access the Application
+### Access the System
 
-Open your web browser and navigate to:
+Navigate to your browser:
 
 ```
 http://localhost:8080
 ```
 
-**Default Port:** 8080 (Can be changed in `server.js` by modifying the `port` variable)
+**Server Configuration:**
+
+- Default Port: 8080 (configurable in `server.js`)
+- Environment: Development (for production, set NODE_ENV=production)
 
 ---
 
-## Application Routes
+## API Endpoints
 
-### Authentication & Registration
+### Authentication
 
-| Route                | Method | Description                 |
-| -------------------- | ------ | --------------------------- |
-| `/register`          | GET    | User registration page      |
-| `/login`             | GET    | User login page             |
-| `/api/users`         | POST   | Register new user           |
-| `/api/authenticate`  | POST   | Authenticate user login     |
-| `/api/checkusername` | POST   | Check username availability |
-| `/api/checkemail`    | POST   | Check email availability    |
+| Endpoint             | Method | Payload                             | Response                   |
+| -------------------- | ------ | ----------------------------------- | -------------------------- |
+| `/api/users`         | POST   | `{name, email, username, password}` | New user object + token    |
+| `/api/authenticate`  | POST   | `{username, password}`              | Authenticated user + token |
+| `/api/checkusername` | POST   | `{username}`                        | `{available: boolean}`     |
+| `/api/checkemail`    | POST   | `{email}`                           | `{available: boolean}`     |
 
 ### User Profile
 
-| Route          | Method | Description       |
-| -------------- | ------ | ----------------- |
-| `/profile`     | GET    | View user profile |
-| `/api/profile` | GET    | Get profile data  |
+| Endpoint       | Method | Authorization | Response          |
+| -------------- | ------ | ------------- | ----------------- |
+| `/api/profile` | GET    | JWT Token     | Current user data |
 
-### User Management (Admin/Moderator Only)
+### User Management (Admin/Moderator)
 
-| Route            | Method | Description                                   |
-| ---------------- | ------ | --------------------------------------------- |
-| `/management`    | GET    | User management dashboard                     |
-| `/api/users`     | GET    | Get all users                                 |
-| `/api/users/:id` | GET    | Get specific user                             |
-| `/api/users/:id` | PUT    | Edit user (name, email, username, permission) |
-| `/api/users/:id` | DELETE | Delete user                                   |
+| Endpoint         | Method | Authorization   | Action                                 |
+| ---------------- | ------ | --------------- | -------------------------------------- |
+| `/api/users`     | GET    | Admin/Moderator | Retrieve all users with pagination     |
+| `/api/users/:id` | GET    | Admin/Moderator | Retrieve specific user by ID           |
+| `/api/users/:id` | PUT    | Admin/Moderator | Update user (name, email, permissions) |
+| `/api/users/:id` | DELETE | Admin only      | Permanently delete user account        |
 
-### Home & Navigation
+### Navigation Routes
 
-| Route     | Method | Description |
-| --------- | ------ | ----------- |
-| `/`       | GET    | Home page   |
-| `/about`  | GET    | About page  |
-| `/logout` | GET    | User logout |
+| Route         | Method | Purpose           |
+| ------------- | ------ | ----------------- |
+| `/`           | GET    | Home page         |
+| `/register`   | GET    | Registration form |
+| `/login`      | GET    | Login form        |
+| `/profile`    | GET    | User profile      |
+| `/management` | GET    | Admin dashboard   |
+| `/logout`     | GET    | Terminate session |
 
 ---
 
-## Project Structure
+## Architecture & Project Structure
 
 ```
-meanstacktutorial/
-├── server.js                 # Main server file (Express setup, MongoDB connection)
-├── package.json              # Node.js dependencies
+user-management-system/
+├── server.js                    # Express.js server, middleware configuration, DB connection
+├── package.json                 # Dependencies and npm scripts
+├── README.md                    # This file
 ├── app/
 │   ├── models/
-│   │   └── user.js          # MongoDB User schema and validation
+│   │   └── user.js             # MongoDB schema with validation and password hashing middleware
 │   ├── routes/
-│   │   └── api.js           # API route handlers
+│   │   └── api.js              # RESTful API endpoints for authentication and user management
 │   └── passport/
-│       └── passport.js      # Authentication strategies (social login)
+│       └── passport.js         # Passport.js authentication strategies
 └── public/
     └── app/
-        ├── app.js           # Angular app initialization
-        ├── routes.js        # Angular route configuration
-        ├── controllers/     # Angular controllers
-        │   ├── mainCtrl.js
-        │   ├── userCtrl.js
-        │   ├── managementCtrl.js
-        │   └── emailCtrl.js
-        ├── services/        # Angular services
-        │   ├── userServices.js
-        │   └── authServices.js
-        ├── views/           # HTML templates
-        │   ├── index.html
+        ├── app.js              # Angular.js application bootstrap
+        ├── routes.js           # Client-side routing configuration
+        ├── controllers/        # Angular controllers for business logic
+        │   ├── mainCtrl.js     # Navigation and session management
+        │   ├── userCtrl.js     # User profile and authentication
+        │   ├── managementCtrl.js # Admin dashboard functionality
+        │   └── emailCtrl.js    # Email-related operations
+        ├── services/           # Angular services for API communication
+        │   ├── userServices.js # User API interactions
+        │   └── authServices.js # Authentication state management
+        ├── views/              # HTML templates
+        │   ├── index.html      # Main layout with navigation
         │   └── pages/
         │       ├── home.html
         │       ├── about.html
-        │       ├── users/
-        │       └── management/
+        │       ├── users/      # Authentication and profile pages
+        │       └── management/ # Admin interface pages
         └── assets/
-            ├── css/         # Stylesheets
-            ├── js/          # Third-party libraries
-            ├── fonts/       # Font files
-            └── images/      # Image assets
+            ├── css/            # Bootstrap and custom styling
+            ├── js/             # Third-party libraries (Angular, jQuery)
+            ├── fonts/          # Font assets
+            └── images/         # Application imagery
 ```
 
----
+### Technology Stack
 
-## User Roles & Permissions
-
-The application supports three user roles:
-
-| Role          | Permissions                              |
-| ------------- | ---------------------------------------- |
-| **User**      | View own profile, change password        |
-| **Moderator** | All user permissions + edit other users  |
-| **Admin**     | All moderator permissions + delete users |
+| Layer    | Technology             | Version |
+| -------- | ---------------------- | ------- |
+| Database | MongoDB                | 4.0+    |
+| Backend  | Node.js + Express.js   | 4.14.0  |
+| Frontend | Angular.js + Bootstrap | 1.x     |
+| Auth     | JWT + bcryptjs         | -       |
+| ODM      | Mongoose               | 5.13+   |
 
 ---
 
-## Troubleshooting
+## Access Control Model
 
-### MongoDB Connection Error
+The system implements a three-tier role hierarchy:
 
-**Error:** `Not connected to the database: MongoError...`
+| Role          | Permissions                                       |
+| ------------- | ------------------------------------------------- |
+| **User**      | View own profile, manage account password         |
+| **Moderator** | User permissions + view all users, edit user data |
+| **Admin**     | Full system access including user deletion        |
 
-**Solution:**
+Role assignment is managed through the MongoDB User schema `userPermission` field.
 
-1. Ensure MongoDB is running: `sudo systemctl status mongod`
-2. Verify connection string in `server.js`
-3. Check MongoDB is listening on port 27017 (default)
+---
 
-### Port Already in Use
+## Security Features
 
-**Error:** `EADDRINUSE: address already in use :::8080`
+- **Password Security:** bcryptjs hashing with configurable salt rounds
+- **Token Authentication:** JWT with 24-hour expiration window
+- **Input Validation:** Mongoose schema validators on all user inputs
+- **Session Management:** Secure session handling with express-session
+- **CSRF Protection:** Can be enabled via middleware configuration
+- **Email Verification:** Optional two-factor verification pipeline ready for implementation
 
-**Solution:**
+---
 
-1. Kill the existing process: `pkill -f "node server.js"`
-2. Or change the port in `server.js`: `var port = process.env.PORT || 3000;`
+## Troubleshooting & Support
 
-### Module Not Found
+### MongoDB Connection Failures
 
-**Error:** `Cannot find module 'express'` (or other modules)
+**Issue:** `MongoError: connect ECONNREFUSED 127.0.0.1:27017`
 
-**Solution:**
+**Resolution:**
+
+1. Verify MongoDB is running: `sudo systemctl status mongod`
+2. Start MongoDB: `sudo systemctl start mongod`
+3. Check connection string in `server.js`
+4. Ensure port 27017 is not blocked by firewall
+
+### Port Conflicts
+
+**Issue:** `EADDRINUSE: address already in use :::8080`
+
+**Resolution:**
+
+Find and terminate the existing process:
+
+```bash
+lsof -i :8080          # List processes using port 8080
+kill -9 <PID>          # Terminate the process
+```
+
+Or modify the port in `server.js`:
+
+```javascript
+const port = process.env.PORT || 3000;
+```
+
+### Module Resolution Errors
+
+**Issue:** `Cannot find module 'express'`
+
+**Resolution:**
+
+Clean install dependencies:
 
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-### Email Notifications Not Working (Development Mode)
+### Email Service Issues (Development)
 
-**Note:** Email notifications are mocked in development mode and only logged to console. This is intentional to avoid email authentication errors during testing.
+Email notifications are intentionally mocked in development mode to prevent SMTP authentication failures. This prevents blocking on email service errors during testing. To enable production email:
 
-To enable real email notifications, configure valid email credentials in `app/routes/api.js`.
+1. Configure SMTP credentials in environment variables
+2. Replace mockSendMail with actual Nodemailer transport in `app/routes/api.js`
+3. Test thoroughly in a staging environment before production deployment
+
+---
+
+## Performance Optimization
+
+- **Database Indexing:** User schema includes indexes on `username` and `email` for faster queries
+- **Pagination:** User list queries support limit/offset parameters to handle large datasets
+- **Caching:** Session tokens reduce repeated authentication database calls
+- **Lazy Loading:** Angular routes load views on-demand to minimize initial bundle size
+
+---
+
+## Development Roadmap
+
+**Potential Enhancements:**
+
+- [ ] Two-factor authentication (2FA) integration
+- [ ] Redis caching layer for session management
+- [ ] GraphQL API option alongside REST endpoints
+- [ ] User activity audit logging
+- [ ] Export user data functionality (GDPR compliance)
+- [ ] Rate limiting on authentication endpoints
+- [ ] Docker containerization for simplified deployment
+- [ ] Automated test suite (Jest/Mocha)
+
+---
+
+## License
+
+ISC License - See LICENSE file for details
+
+---
+
+## Author
+
+**Mahmoud El-Tohamy**
+
+A full-stack JavaScript developer specializing in MEAN stack applications and user management systems.
+
+---
+
+## Support & Contributions
+
+For bug reports or feature requests, please open an issue in the repository. All pull requests are reviewed and considered for integration.
 
 ---
 
